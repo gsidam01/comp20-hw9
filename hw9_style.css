@@ -1,0 +1,86 @@
+/*
+ * George Sidamon-Eristoff 
+ * 28 March 2020
+ * Tufts Comp20 Spring 2020
+ * Homework 9 - JSON, HTML Filters
+ */
+
+/* General Stylistc Elements */
+header
+{
+    color: #ffffff;
+}
+
+body
+{
+    font-family: georgia,times,arial,helvetica;
+    font-size: 18px;
+    background-color: #55aa55;
+}
+
+article
+{
+    margin-top: 20px;
+}
+
+h3
+{
+    margin-top: 25px;
+    margin-bottom: 0px;
+}
+
+
+/* Part 1: Serialized Data */
+#Serialized
+{
+    font-size: 12px;
+
+}
+
+
+/* Part 2: User-Friendly Display */
+section
+{
+    width: 30%;
+    position: relative;
+    display: inline-block;
+    padding: 1%;
+    height: 25%;
+    vertical-align: middle;
+}
+
+strong
+{
+    color: #0000ff;
+}
+
+em
+{
+    color: #dd0000;
+}
+
+
+/* Part 3: Filter(s) */
+div
+{
+    color: #00ffff;
+    padding: 1%;
+    display: inline-block;
+    position: relative;
+    width: 45%;
+}
+
+select
+{
+    width: 150px;
+    font-size: 15px;
+}
+
+#Filter_Dest
+{
+    color: #931fae;
+    width: 90%;
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+}

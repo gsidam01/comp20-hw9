@@ -1,0 +1,275 @@
+<!-- /*
+ * George Sidamon-Eristoff 
+ * 28 March 2020
+ * Tufts Comp20 Spring 2020
+ * Homework 9 - JSON, HTML Filters
+ */ -->
+
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>George Sidamon-Eristoff Homework 9</title>
+    <link rel="stylesheet" type="text/css" href="hw9_style.css" />
+</head>
+<body>
+    <header>
+        George Sidamon-Eristoff<br />
+        28 March 2020<br />
+        Tufts Comp20 Spring 2020<br />
+        Homework 9 - JSON, HTML Filters<br />
+    </header>
+    <main>
+        <h3>Serialized:</h3>
+        <article id="Serialized">
+        </article>
+
+        <h3>User-Friendly Table:</h3>
+        <article id="Table">
+        </article>
+
+        <h3>Filters:</h3>
+        <article id="Filter">
+            <div>
+                To filter by genre, select an option from this menu:<br />
+                <select id="Genre_Selector" onchange="filter_genre(this.value)">
+                    <option value="start">Filter:</option>
+                    <option value="Rock">Rock</option>
+                    <option value="Bluegrass">Bluegrass</option>
+                    <option value="Country">Country</option>
+                    <option value="Pop">Pop</option>
+                    <option value="Reggae">Reggae</option>
+                    <option value="Folk">Folk</option>
+                    <option value="Americana">Americana</option>
+                    <option value="Old-Timey">Old-Timey</option>
+                </select>
+            </div>
+            <div>
+                To filter by decade, select an option from this menu:<br />
+                <select id="Decade_Selector" onchange="filter_decade(this.value)">
+                    <option value="start">Filter:</option>
+                    <option value="1960">60s</option>
+                    <option value="1970">70s</option>
+                    <option value="1980">80s</option>
+                    <option value="1990">90s</option>
+                    <option value="2000">00s</option>
+                    <option value="2010">10s</option>
+                </select>
+            </div>
+            <div id="Filter_Dest">
+            </div>
+        </article>
+    </main>
+</body>
+<script type="text/javascript" language="javascript">
+    /* 
+     * my JSON
+     *  - complete with title, artist(s), year, genre(s)
+     *  - additionally contains track number, album
+     */
+    var set_list_json = { "my_list":
+        [
+            {
+                "track": 1,
+                "title": "I'm a Believer",
+                "artists": [ "The Monkees" ],
+                "album": "More of the Monkees",
+                "year": 1967,
+                "genres": ["Rock" ]
+            },
+            {
+                "track": 2,
+                "title": "Fire on the Mountain",
+                "artists": [ "The Marshall Tucker Band" ],
+                "album": "Searchin' for a Rainbow",
+                "year": 1975,
+                "genres": [ "Rock" ]
+            },
+            {
+                "track": 3,
+                "title": "Roll In My Sweet Baby's Arms",
+                "artists": [ "Ricky Skaggs", "Kentucky Thunder" ],
+                "album": "History of the Future",
+                "year": 2001,
+                "genres": [ "Bluegrass" ]
+            },
+            {
+                "track": 4,
+                "title": "Beer Can't Fix",
+                "artists": [ "Thomas Rhett", "Jon Pardi" ],
+                "album": "Center Point Road",
+                "year": 2019,
+                "genres": [ "Country" ]
+            },
+            {
+                "track": 5,
+                "title": "Free Bird",
+                "artists": [ "Lynyrd Skynyrd" ],
+                "album": "(Pronounced 'Lĕh-'nérd 'Skin-'nérd)",
+                "year": 1973,
+                "genres": [ "Rock" ]
+            },
+            {
+                "track": 6,
+                "title": "I Want You Back",
+                "artists": [ "The Jackson 5" ],
+                "album": "I Want You Back",
+                "year": 1969,
+                "genres": [ "Pop" ]
+            },
+            {
+                "track": 7,
+                "title": "ABC",
+                "artists": [ "The Jackson 5" ],
+                "album": "ABC",
+                "year": 1970,
+                "genres": [ "Pop" ]
+            },
+            {
+                "track": 8,
+                "title": "Pressure Drop",
+                "artists": [ "Toots", "The Maytals" ],
+                "album": "Sweet and Dandy",
+                "year": 1968,
+                "genres": [ "Reggae" ]
+            },
+            {
+                "track": 9,
+                "title": "Wildfire",
+                "artists": [ "John Mayer" ],
+                "album": "Paradise Valley",
+                "year": 2013,
+                "genres": [ "Country", "Folk", "Americana"]
+            },
+            {
+                "track": 10,
+                "title": "Walking On Sunshine",
+                "artists": [ "Katrina", "The Waves" ],
+                "album": "Walking on Sunshine",
+                "year": 1985,
+                "genres": [ "Pop" ]
+            },
+            {
+                "track": 11,
+                "title": "A Boy Named Sue",
+                "artists": [ "Johnny Cash" ],
+                "album": "At San Quentin",
+                "year": 1969,
+                "genres": [ "Country", "Old-Timey" ]
+            },
+            {
+                "track": 12,
+                "title": "Western Skies",
+                "artists": [ "Hot Rize" ],
+                "album": "When I'm Free",
+                "year": 2014,
+                "genres": [ "Bluegrass" ]
+            }
+        ]
+    };
+
+    /* displays the serialized JSON */
+    document.getElementById("Serialized").innerHTML = JSON.stringify(set_list_json);
+
+
+    /* build_section formats data to be displayed in the User-Friendly format */
+    function build_section(set_list_json, index)
+    {
+        var art_len = set_list_json.my_list[index].artists.length;
+        var gen_len = set_list_json.my_list[index].genres.length;
+
+        var return_string = "<section><strong>" + 
+            set_list_json.my_list[index].track  + ". &nbsp;&nbsp;" +
+            set_list_json.my_list[index].title + "</strong><br />";
+        if(art_len > 1) {
+            return_string += "Artists: <em>";
+            for (var counter = 0; counter < art_len - 1; counter++) {
+                return_string += set_list_json.my_list[index].artists[counter] + ", ";
+            }
+            return_string += set_list_json.my_list[index].artists[(art_len - 1)] + "</em><br />";
+        } else {
+            return_string += "Artist: <em>" + set_list_json.my_list[index].artists[0] + "</em><br />";
+        }
+
+        if(gen_len > 1) {
+            return_string += "Genres: ";
+            for (var counter = 0; counter < gen_len - 1; counter++) {
+                return_string += set_list_json.my_list[index].genres[counter] + ", ";
+            }
+            return_string += set_list_json.my_list[index].genres[(gen_len - 1)] + "<br />";
+        } else {
+            return_string += "Genre: " + set_list_json.my_list[index].genres[0] + "<br />";
+        }
+
+
+        return_string +=
+            "Album: " + set_list_json.my_list[index].album + "<br />" +
+            "Year: " + set_list_json.my_list[index].year + "</section>";
+        return return_string;
+    }
+
+    /* build_table formats data via build_section and displays it in the User-Friendly format */
+    function build_table(set_list_json)
+    {
+        for(var i =  0; i < 12; i++)
+        {
+            document.getElementById("Table").innerHTML += build_section(set_list_json, i);
+        }
+    }
+
+    /* called here to implement Part 2: User Friendly Data Display */
+    build_table(set_list_json);
+
+
+
+    /* filters the data and displays that which corresponds to the desired genre */
+    /* called by a filter <select> in the html */
+    function filter_genre(value)
+    {
+        if (value == "start") {
+            document.getElementById("Filter_Dest").innerHTML = "";
+            return;
+        }
+        var disp_str = "Songs in the " + value + " genre: ";
+        for (var index = 0; index < 12; index++)
+        {
+            var gen_len = set_list_json.my_list[index].genres.length;
+            for(var gen_num = 0; gen_num < gen_len; gen_num++) {
+                if (set_list_json.my_list[index].genres[gen_num] == value) {
+                    disp_str += set_list_json.my_list[index].title + ", "
+                }
+            }
+        }
+        disp_str = disp_str.slice(0, disp_str.length - 2);
+            document.getElementById("Filter_Dest").innerHTML = disp_str;
+
+    }
+    
+    /* filters the data and displays that which corresponds to the desired decade */
+    /* called by a filter <select> in the html */
+    function filter_decade(value)
+    {
+        if (value == "start") {
+            document.getElementById("Filter_Dest").innerHTML = "";
+            return;
+        }
+        var disp_str = "Songs from the " + value + "s: ";
+        if (value == "1990") {
+            disp_str = "None of our songs are from the 90s, sorry!";
+        }
+        else{
+            for (var index = 0; index < 12; index++)
+            {
+                var remainder = parseInt(set_list_json.my_list[index].year) - parseInt(value);
+                if (remainder >= 0 && remainder < 10) {
+                    disp_str += set_list_json.my_list[index].title + ", "
+                }
+            }
+            disp_str = disp_str.slice(0, disp_str.length - 2);
+        }
+        document.getElementById("Filter_Dest").innerHTML = disp_str;
+
+    }
+</script>
+</html>
+
